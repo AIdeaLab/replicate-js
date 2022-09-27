@@ -1,10 +1,36 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DefaultFetchHTTPClient = exports.ReplicateModel = exports.Replicate = void 0;
 // Default configuration
 const BASE_URL = "https://api.replicate.com/v1";
 const DEFAULT_POLLING_INTERVAL = 5000;
 // Utility functions
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const isNode = typeof process !== "undefined" && process.versions != null && process.versions.node != null;
-export class Replicate {
+class Replicate {
     constructor({ token, proxyUrl, httpClient, pollingInterval } = {}) {
         this.token = token;
         this.baseUrl = proxyUrl ? `${proxyUrl}/${BASE_URL}` : BASE_URL;
@@ -35,7 +61,7 @@ export class Replicate {
             event: "getPrediction",
         });
     }
-    async startPrediction(modelVersion, input, webhookCompleted=null) {
+    async startPrediction(modelVersion, input, webhookCompleted = null) {
         return await this.callHttpClient({
             url: "/predictions",
             method: "post",
@@ -53,7 +79,8 @@ export class Replicate {
         });
     }
 }
-export class ReplicateModel {
+exports.Replicate = Replicate;
+class ReplicateModel {
     static async fetch(options) {
         const model = new ReplicateModel(options);
         await model.getModelDetails();
@@ -93,8 +120,9 @@ export class ReplicateModel {
         return prediction;
     }
 }
+exports.ReplicateModel = ReplicateModel;
 // This class just makes it a bit easier to call fetch -- interface similar to the axios library
-export class DefaultFetchHTTPClient {
+class DefaultFetchHTTPClient {
     constructor(token) {
         this.headers = {
             Authorization: `Token ${token}`,
@@ -105,7 +133,7 @@ export class DefaultFetchHTTPClient {
     // This class uses fetch, which is still experimental in Node 18, so we import a polyfill for Node if fetch is not defined
     async importFetch() {
         if (isNode && !globalThis.fetch)
-            globalThis.fetch = (await import("node-fetch"))["default"];
+            globalThis.fetch = (await Promise.resolve().then(() => __importStar(require("node-fetch"))))["default"];
     }
     async get({ url }) {
         await this.importFetch();
@@ -123,4 +151,5 @@ export class DefaultFetchHTTPClient {
         return await response.json();
     }
 }
-export default Replicate;
+exports.DefaultFetchHTTPClient = DefaultFetchHTTPClient;
+exports.default = Replicate;

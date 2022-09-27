@@ -12,25 +12,25 @@ export interface Replicate extends ReplicateInputProps {
 }
 export declare class Replicate {
     models: {
-        get: (path: string, version?: string) => Promise<Model>;
+        get: (path: string, version?: string) => Promise<ReplicateModel>;
     };
     constructor({ token, proxyUrl, httpClient, pollingInterval }?: ReplicateInputProps);
     getModel(path: string): Promise<any>;
     getPrediction(id: string): Promise<any>;
-    startPrediction(modelVersion: string, input: PredictionInput): Promise<any>;
+    startPrediction(modelVersion: string, input: PredictionInput, webhookCompleted?: string): Promise<any>;
     protected callHttpClient({ url, method, event, body }: HTTPClientRequest): Promise<any>;
 }
-export interface ModelInputProps {
+export interface ReplicateModelInputs {
     path: string;
     version: string;
     replicate?: any;
     modelDetails?: any;
 }
-export interface Model extends ModelInputProps {
+export interface ReplicateModel extends ReplicateModelInputs {
 }
-export declare class Model {
-    static fetch(options: ModelInputProps): Promise<Model>;
-    constructor({ path, version, replicate }: ModelInputProps);
+export declare class ReplicateModel {
+    static fetch(options: ReplicateModelInputs): Promise<ReplicateModel>;
+    constructor({ path, version, replicate }: ReplicateModelInputs);
     getModelDetails(): Promise<void>;
     predictor(input: PredictionInput): AsyncGenerator<any, void, unknown>;
     predict(input?: PredictionInput): Promise<any>;

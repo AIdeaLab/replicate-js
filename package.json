@@ -1,14 +1,14 @@
 {
   "name": "replicate-js",
-  "version": "0.0.7",
+  "version": "0.0.7-cjs",
   "description": "WIP Replicate JS Client",
   "main": "replicate.js",
   "types": "replicate.d.ts",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "express": "^4.18.1",
     "http-proxy-middleware": "^2.0.6",
-    "node-fetch": "^3.2.6"
+    "node-fetch": "^2.6.7"
   },
   "scripts": {
     "build": "tsc",

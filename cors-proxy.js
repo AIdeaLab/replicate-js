@@ -1,5 +1,10 @@
-import express from 'express';
-import { createProxyMiddleware } from 'http-proxy-middleware';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const http_proxy_middleware_1 = require("http-proxy-middleware");
 // Configuration
 const REPLICATE_TOKEN = process.env.REPLICATE_API_TOKEN;
 const appendAuthHeaders = (proxyReq) => {
@@ -10,8 +15,8 @@ const onProxyRes = (proxyRes) => {
     proxyRes.headers['Access-Control-Allow-Headers'] = '*';
     delete proxyRes.headers['content-type'];
 };
-const app = express();
-app.use('/api/', createProxyMiddleware({
+const app = (0, express_1.default)();
+app.use('/api/', (0, http_proxy_middleware_1.createProxyMiddleware)({
     router: (req) => req.originalUrl.replace(/.*https?:\/\//, 'https://'),
     changeOrigin: true,
     pathRewrite: { '.*': '' },
